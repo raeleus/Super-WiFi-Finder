@@ -69,7 +69,7 @@ public class GameState extends State {
     public void start() {
         instance = this;
         
-        spineAtlas = Core.assetManager.get(Core.DATA_PATH + "/spine/glassy-ui.atlas", TextureAtlas.class);
+        spineAtlas = Core.assetManager.get(Core.DATA_PATH + "/spine/superwififinder.atlas", TextureAtlas.class);
         
         score = 0;
         
@@ -89,7 +89,7 @@ public class GameState extends State {
         
         gameCamera.position.set(gameCamera.viewportWidth / 2, gameCamera.viewportHeight / 2, 0);
         
-        skin = Core.assetManager.get(Core.DATA_PATH + "/ui/vault-bound.json", Skin.class);
+        skin = Core.assetManager.get(Core.DATA_PATH + "/ui/glassy-ui.json", Skin.class);
         stage = new Stage(new ScreenViewport());
         
         InputMultiplexer inputMultiplexer = new InputMultiplexer();
