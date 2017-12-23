@@ -50,7 +50,7 @@ public class GameOverState extends State {
 
     @Override
     public void start() {
-        skin = Core.assetManager.get(Core.DATA_PATH + "/ui/vault-bound.json", Skin.class);
+        skin = Core.assetManager.get(Core.DATA_PATH + "/ui/glassy-ui.json", Skin.class);
         
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
@@ -60,7 +60,7 @@ public class GameOverState extends State {
 
     @Override
     public void draw(SpriteBatch spriteBatch, float delta) {
-        Gdx.gl.glClearColor(0f, 0f, 0f, 1);
+        Gdx.gl.glClearColor(85 / 255.0f, 178 / 255.0f, 255 / 255.0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.draw();
     }
@@ -102,12 +102,11 @@ public class GameOverState extends State {
     private void refreshTable() {
         stage.clear();
         
-        Table root = new Table(skin);
-        root.setBackground("bg");
+        Table root = new Table();
         root.setFillParent(true);
         stage.addActor(root);
         
-        Label label = new Label("Game Over", skin, "title");
+        Label label = new Label("Game Over", skin, "big");
         root.add(label).colspan(2);
         
         root.row();

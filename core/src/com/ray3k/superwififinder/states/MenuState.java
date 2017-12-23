@@ -53,7 +53,7 @@ public class MenuState extends State {
     
     @Override
     public void start() {
-        skin = Core.assetManager.get(Core.DATA_PATH + "/ui/vault-bound.json", Skin.class);
+        skin = Core.assetManager.get(Core.DATA_PATH + "/ui/glassy-ui.json", Skin.class);
         stage = new Stage(new ScreenViewport());
         
         Gdx.input.setInputProcessor(stage);
@@ -66,12 +66,11 @@ public class MenuState extends State {
         JsonReader reader = new JsonReader();
         JsonValue val = reader.parse(fileHandle);
         
-        root = new Table(skin);
-        root.setBackground("bg");
+        root = new Table();
         root.setFillParent(true);
         stage.addActor(root);
         
-        Label label = new Label(val.getString("title"), skin, "title");
+        Label label = new Label(val.getString("title"), skin, "big");
         label.setAlignment(Align.center);
         root.add(label).padBottom(50.0f).padTop(100.0f).colspan(2).expand();
         
@@ -83,7 +82,7 @@ public class MenuState extends State {
         textButtton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
-                Core.assetManager.get(Core.DATA_PATH + "/sfx/jump.wav", Sound.class).play(.25f);
+                Core.assetManager.get(Core.DATA_PATH + "/sfx/beep.wav", Sound.class).play(.25f);
                 Core.stateManager.loadState("game");
             }
         });
@@ -94,7 +93,7 @@ public class MenuState extends State {
         textButtton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
-                Core.assetManager.get(Core.DATA_PATH + "/sfx/jump.wav", Sound.class).play(.25f);
+                Core.assetManager.get(Core.DATA_PATH + "/sfx/beep.wav", Sound.class).play(.25f);
                 Gdx.app.exit();
             }
         });
@@ -102,7 +101,7 @@ public class MenuState extends State {
     
     @Override
     public void draw(SpriteBatch spriteBatch, float delta) {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClearColor(85 / 255.0f, 178 / 255.0f, 255 / 255.0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.draw();
     }
