@@ -24,12 +24,15 @@
 
 package com.ray3k.superwififinder.entities;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.ray3k.superwififinder.Core;
 import com.ray3k.superwififinder.Entity;
 import com.ray3k.superwififinder.SpineEntity;
 
 public class PlayerEntity extends SpineEntity {
+    private final static float MOVE_SPEED = 100.0f;
     public PlayerEntity() {
         super(Core.DATA_PATH + "/spine/robot.json", "stand");
         getAnimationState().getCurrent(0).setLoop(true);
@@ -42,6 +45,26 @@ public class PlayerEntity extends SpineEntity {
 
     @Override
     public void actSub(float delta) {
+        if (Gdx.input.isKeyPressed(Keys.RIGHT) || Gdx.input.isKeyPressed(Keys.LEFT) || Gdx.input.isKeyPressed(Keys.UP) || Gdx.input.isKeyPressed(Keys.DOWN)) {
+            if (!getAnimationState().getCurrent(0).getAnimation().getName().equals("walk")) {
+                getAnimationState().setAnimation(0, "walk", true);
+            }
+        } else {
+            if (!getAnimationState().getCurrent(0).getAnimation().getName().equals("stand")) {
+                getAnimationState().setAnimation(0, "stand", true);
+                setMotion(0.0f, 0.0f);
+            }
+        }
+        
+        if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
+            setMotion(MOVE_SPEED, 0.0f);
+        } else if (Gdx.input.isKeyPressed(Keys.LEFT)) {
+            setMotion(MOVE_SPEED, 180.0f);
+        } else if (Gdx.input.isKeyPressed(Keys.UP)) {
+            setMotion(MOVE_SPEED, 90.0f);
+        } else if (Gdx.input.isKeyPressed(Keys.DOWN)) {
+            setMotion(MOVE_SPEED, 270.0f);
+        }
     }
 
     @Override
