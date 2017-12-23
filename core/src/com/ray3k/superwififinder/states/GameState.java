@@ -35,11 +35,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.ray3k.superwififinder.Core;
 import com.ray3k.superwififinder.EntityManager;
 import com.ray3k.superwififinder.InputManager;
 import com.ray3k.superwififinder.State;
+import com.ray3k.superwififinder.entities.PlayerEntity;
 
 public class GameState extends State {
     private static GameState instance;
@@ -83,7 +85,7 @@ public class GameState extends State {
         uiCamera.position.set(uiCamera.viewportWidth / 2, uiCamera.viewportHeight / 2, 0);
         
         gameCamera = new OrthographicCamera();
-        gameViewport = new ScreenViewport(gameCamera);
+        gameViewport = new StretchViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), gameCamera);
         gameViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         gameViewport.apply();
         
@@ -105,7 +107,9 @@ public class GameState extends State {
         
         createStageElements();
         
-        
+        PlayerEntity player = new PlayerEntity();
+        player.setPosition(Gdx.graphics.getWidth() / 2.0f, Gdx.graphics.getHeight() / 2.0f);
+        entityManager.addEntity(player);
     }
     
     private void createStageElements() {
@@ -151,8 +155,7 @@ public class GameState extends State {
     
     @Override
     public void resize(int width, int height) {
-        gameViewport.update(width, height);
-        gameCamera.position.set(width / 2, height / 2.0f, 0.0f);
+        gameViewport.update(width, height, true);
         
         uiViewport.update(width, height);
         uiCamera.position.set(uiCamera.viewportWidth / 2, uiCamera.viewportHeight / 2, 0);
