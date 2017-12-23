@@ -69,7 +69,7 @@ public class GameState extends State {
     public void start() {
         instance = this;
         
-        spineAtlas = Core.assetManager.get(Core.DATA_PATH + "/spine/vault-bound.atlas", TextureAtlas.class);
+        spineAtlas = Core.assetManager.get(Core.DATA_PATH + "/spine/glassy-ui.atlas", TextureAtlas.class);
         
         score = 0;
         
@@ -195,23 +195,7 @@ public class GameState extends State {
         return stage;
     }
     
-    public void playJet() {
-        Core.assetManager.get(Core.DATA_PATH + "/sfx/jet.wav", Sound.class).play(.25f);
-    }
-    
-    public void playJump() {
-        Core.assetManager.get(Core.DATA_PATH + "/sfx/jump.wav", Sound.class).play(.25f);
-    }
-    
-    public void playHurt() {
-        Core.assetManager.get(Core.DATA_PATH + "/sfx/hurt.wav", Sound.class).play(.25f);
-    }
-    
-    public void playThud() {
-        Core.assetManager.get(Core.DATA_PATH + "/sfx/thud.wav", Sound.class).play(.25f);
-    }
-    
-    public void playBlast() {
-        Core.assetManager.get(Core.DATA_PATH + "/sfx/blast.wav", Sound.class).play(.5f);
+    public void playSound(String name, float volume) {
+        Core.assetManager.get(Core.DATA_PATH + "/sfx/" + name + ".wav", Sound.class).play(volume);
     }
 }
