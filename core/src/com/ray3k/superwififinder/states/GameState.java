@@ -34,6 +34,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -59,6 +60,7 @@ public class GameState extends State {
     private Label scoreLabel;
     public static EntityManager entityManager;
     public static TextureAtlas spineAtlas;
+    private TiledDrawable bg, liner, wall;
     
     public static GameState inst() {
         return instance;
@@ -123,6 +125,10 @@ public class GameState extends State {
         obstacle = new ObstacleEntity(ObstacleEntity.Type.SOFA);
         obstacle.setPosition(50.0f, 200.0f);
         entityManager.addEntity(obstacle);
+        
+        bg = new TiledDrawable(spineAtlas.findRegion("floor"));
+        liner = new TiledDrawable(spineAtlas.findRegion("liner"));
+        wall = new TiledDrawable(spineAtlas.findRegion("wall"));
     }
     
     private void createStageElements() {
@@ -139,10 +145,14 @@ public class GameState extends State {
         Gdx.gl.glClearColor(207.0f / 255.0f, 111.0f / 255.0f, 101.0f / 255.0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         
+        
         gameCamera.update();
         spriteBatch.setProjectionMatrix(gameCamera.combined);
         spriteBatch.begin();
         spriteBatch.setBlendFunction(GL20.GL_ONE, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        bg.draw(spriteBatch, 0.0f, 0.0f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        wall.draw(spriteBatch, 0.0f, Gdx.graphics.getHeight() - 160.0f, Gdx.graphics.getWidth(), 160.0f);
+        liner.draw(spriteBatch, 0.0f, Gdx.graphics.getHeight() - 160.0f, Gdx.graphics.getWidth(), 23.0f);
         entityManager.draw(spriteBatch, delta);
         spriteBatch.end();
         
