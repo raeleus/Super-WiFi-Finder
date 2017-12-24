@@ -25,26 +25,22 @@
 package com.ray3k.superwififinder.entities;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.ray3k.superwififinder.Core;
 import com.ray3k.superwififinder.Entity;
 import com.ray3k.superwififinder.SpineEntity;
 
 public class ObstacleEntity extends SpineEntity {
     public static enum Type {
-        SOFA, LAMP, PLANT;
+        SOFA(Core.DATA_PATH + "/spine/sofa.json"), LAMP(Core.DATA_PATH + "/spine/lamp.json"), PLANT(Core.DATA_PATH + "/spine/plant.json");
+        String path;
         
-        public Type()
+        Type(String path) {
+            this.path = path;
+        }
     }
 
     public ObstacleEntity(Type type) {
-        switch (type) {
-            case SOFA:
-                setSkeletonData(, animation);
-                break;
-            case LAMP:
-                break;
-            case PLANT:
-                break;
-        }
+        setSkeletonData(type.path, "animation");
     }
 
     @Override
