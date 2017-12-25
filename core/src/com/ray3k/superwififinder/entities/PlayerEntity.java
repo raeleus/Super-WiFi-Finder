@@ -81,6 +81,8 @@ public class PlayerEntity extends SpineEntity {
                 setMotion(0.0f, 0.0f);
             }
         }
+        
+        setDepth((int) getY());
     }
 
     @Override

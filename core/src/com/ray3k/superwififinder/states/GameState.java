@@ -112,18 +112,22 @@ public class GameState extends State {
         
         PlayerEntity player = new PlayerEntity();
         player.setPosition(Gdx.graphics.getWidth() / 2.0f, Gdx.graphics.getHeight() / 2.0f);
+        player.setDepth((int) player.getY());
         entityManager.addEntity(player);
         
         ObstacleEntity obstacle = new ObstacleEntity(ObstacleEntity.Type.LAMP);
         obstacle.setPosition(50.0f, 50.0f);
+        obstacle.setDepth((int) obstacle.getY());
         entityManager.addEntity(obstacle);
         
         obstacle = new ObstacleEntity(ObstacleEntity.Type.PLANT);
         obstacle.setPosition(200.0f, 50.0f);
+        obstacle.setDepth((int) obstacle.getY());
         entityManager.addEntity(obstacle);
         
         obstacle = new ObstacleEntity(ObstacleEntity.Type.SOFA);
         obstacle.setPosition(50.0f, 200.0f);
+        obstacle.setDepth((int) obstacle.getY());
         entityManager.addEntity(obstacle);
         
         bg = new TiledDrawable(spineAtlas.findRegion("floor"));
