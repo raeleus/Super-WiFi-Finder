@@ -30,6 +30,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.ray3k.superwififinder.Core;
 import com.ray3k.superwififinder.Entity;
 import com.ray3k.superwififinder.SpineEntity;
+import com.ray3k.superwififinder.states.GameState;
 
 public class PlayerEntity extends SpineEntity {
     private final static float MOVE_SPEED = 100.0f;
@@ -61,24 +62,88 @@ public class PlayerEntity extends SpineEntity {
             if (getX() >= Gdx.graphics.getWidth() - 30.0f) {
                 setX(Gdx.graphics.getWidth() - 30.0f);
                 setMotion(0.0f, 0.0f);
+            } else {
+                getSkeleton().setPosition(getX() + getXspeed() * delta, getY() + getYspeed() * delta);
+                getSkeleton().updateWorldTransform();
+                getSkeletonBounds().update(getSkeleton(), true);
+                for (Entity entity : GameState.entityManager.getEntities()) {
+                    if (entity instanceof ObstacleEntity) {
+                        ObstacleEntity obs = (ObstacleEntity) entity;
+                        
+                        if (getSkeletonBounds().aabbIntersectsSkeleton(obs.getSkeletonBounds())) {
+                            setMotion(0.0f, 0.0f);
+                        }
+                    }
+                }
+                getSkeleton().setPosition(getX(), getY());
+                getSkeleton().updateWorldTransform();
+                getSkeletonBounds().update(getSkeleton(), true);
             }
         } else if (Gdx.input.isKeyPressed(Keys.LEFT)) {
             setMotion(MOVE_SPEED, 180.0f);
             if (getX() <= 30.0f) {
                 setX(30.0f);
                 setMotion(0.0f, 0.0f);
+            } else {
+                getSkeleton().setPosition(getX() + getXspeed() * delta, getY() + getYspeed() * delta);
+                getSkeleton().updateWorldTransform();
+                getSkeletonBounds().update(getSkeleton(), true);
+                for (Entity entity : GameState.entityManager.getEntities()) {
+                    if (entity instanceof ObstacleEntity) {
+                        ObstacleEntity obs = (ObstacleEntity) entity;
+                        
+                        if (getSkeletonBounds().aabbIntersectsSkeleton(obs.getSkeletonBounds())) {
+                            setMotion(0.0f, 0.0f);
+                        }
+                    }
+                }
+                getSkeleton().setPosition(getX(), getY());
+                getSkeleton().updateWorldTransform();
+                getSkeletonBounds().update(getSkeleton(), true);
             }
         } else if (Gdx.input.isKeyPressed(Keys.UP)) {
             setMotion(MOVE_SPEED, 90.0f);
             if (getY() >= Gdx.graphics.getHeight() - 170.0f) {
                 setY(Gdx.graphics.getHeight() - 170.0f);
                 setMotion(0.0f, 0.0f);
+            } else {
+                getSkeleton().setPosition(getX() + getXspeed() * delta, getY() + getYspeed() * delta);
+                getSkeleton().updateWorldTransform();
+                getSkeletonBounds().update(getSkeleton(), true);
+                for (Entity entity : GameState.entityManager.getEntities()) {
+                    if (entity instanceof ObstacleEntity) {
+                        ObstacleEntity obs = (ObstacleEntity) entity;
+                        
+                        if (getSkeletonBounds().aabbIntersectsSkeleton(obs.getSkeletonBounds())) {
+                            setMotion(0.0f, 0.0f);
+                        }
+                    }
+                }
+                getSkeleton().setPosition(getX(), getY());
+                getSkeleton().updateWorldTransform();
+                getSkeletonBounds().update(getSkeleton(), true);
             }
         } else if (Gdx.input.isKeyPressed(Keys.DOWN)) {
             setMotion(MOVE_SPEED, 270.0f);
             if (getY() <= 0.0f) {
                 setY(0.0f);
                 setMotion(0.0f, 0.0f);
+            } else {
+                getSkeleton().setPosition(getX() + getXspeed() * delta, getY() + getYspeed() * delta);
+                getSkeleton().updateWorldTransform();
+                getSkeletonBounds().update(getSkeleton(), true);
+                for (Entity entity : GameState.entityManager.getEntities()) {
+                    if (entity instanceof ObstacleEntity) {
+                        ObstacleEntity obs = (ObstacleEntity) entity;
+                        
+                        if (getSkeletonBounds().aabbIntersectsSkeleton(obs.getSkeletonBounds())) {
+                            setMotion(0.0f, 0.0f);
+                        }
+                    }
+                }
+                getSkeleton().setPosition(getX(), getY());
+                getSkeleton().updateWorldTransform();
+                getSkeletonBounds().update(getSkeleton(), true);
             }
         }
         
