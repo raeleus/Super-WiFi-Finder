@@ -27,13 +27,17 @@ package com.ray3k.superwififinder.entities;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import com.ray3k.superwififinder.Core;
 import com.ray3k.superwififinder.Entity;
 import com.ray3k.superwififinder.SpineEntity;
 import com.ray3k.superwififinder.states.GameState;
+import com.udojava.evalex.Expression;
+import java.math.BigDecimal;
 
 public class PlayerEntity extends SpineEntity {
     private final static float MOVE_SPEED = 100.0f;
+    private static final Vector2 temp = new Vector2();
     public PlayerEntity() {
         super(Core.DATA_PATH + "/spine/robot.json", "stand");
         getAnimationState().getCurrent(0).setLoop(true);
@@ -148,6 +152,15 @@ public class PlayerEntity extends SpineEntity {
         }
         
         setDepth((int) getY());
+        
+        BigDecimal x1 = new BigDecimal(getX());
+        BigDecimal y1 = new BigDecimal(getY());
+        BigDecimal x2 = new BigDecimal(GameState.target.getX());
+        BigDecimal y2 = new BigDecimal(GameState.target.getY());
+        
+        Expression expression = new Expression("1+1+x1+y1+x2+y2").with("x1", x1).with("y1", y1).with("x2", x2).with("y2", y2);
+        
+        System.out.println(expression.eval());
     }
 
     @Override

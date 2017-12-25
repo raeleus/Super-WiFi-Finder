@@ -44,6 +44,7 @@ import com.ray3k.superwififinder.InputManager;
 import com.ray3k.superwififinder.State;
 import com.ray3k.superwififinder.entities.ObstacleEntity;
 import com.ray3k.superwififinder.entities.PlayerEntity;
+import com.ray3k.superwififinder.entities.TargetEntity;
 
 public class GameState extends State {
     private static GameState instance;
@@ -61,6 +62,8 @@ public class GameState extends State {
     public static EntityManager entityManager;
     public static TextureAtlas spineAtlas;
     private TiledDrawable bg, liner, wall;
+    public static TargetEntity target;
+    public static String expression;
     
     public static GameState inst() {
         return instance;
@@ -129,6 +132,10 @@ public class GameState extends State {
         obstacle.setPosition(50.0f, 200.0f);
         obstacle.setDepth((int) obstacle.getY());
         entityManager.addEntity(obstacle);
+        
+        target = new TargetEntity();
+        target.setPosition(700.0f, 500.0f);
+        entityManager.addEntity(target);
         
         bg = new TiledDrawable(spineAtlas.findRegion("floor"));
         liner = new TiledDrawable(spineAtlas.findRegion("liner"));
