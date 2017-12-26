@@ -24,6 +24,7 @@
 package com.ray3k.superwififinder.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
@@ -176,6 +177,10 @@ public class GameState extends State {
         entityManager.act(delta);
         
         stage.act(delta);
+        
+        if (Gdx.input.isKeyPressed(Keys.ESCAPE)) {
+            Core.stateManager.loadState("menu");
+        }
     }
 
     @Override

@@ -33,6 +33,7 @@ import com.ray3k.superwififinder.Entity;
 import com.ray3k.superwififinder.SpineEntity;
 import com.ray3k.superwififinder.states.GameState;
 import com.udojava.evalex.Expression;
+import com.udojava.evalex.Expression.ExpressionException;
 import java.math.BigDecimal;
 
 public class PlayerEntity extends SpineEntity {
@@ -160,7 +161,11 @@ public class PlayerEntity extends SpineEntity {
         
         Expression expression = new Expression(GameState.expression).with("x1", x1).with("y1", y1).with("x2", x2).with("y2", y2);
         
-        System.out.println(expression.eval());
+        try {
+            System.out.println(expression.eval());
+        } catch (ExpressionException e) {
+            Gdx.app.log("PlayerEntity", "Error evaluating player expression.", e);
+        }
     }
 
     @Override
