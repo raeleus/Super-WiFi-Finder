@@ -24,7 +24,6 @@
 
 package com.ray3k.superwififinder.entities;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.ray3k.superwififinder.Core;
 import com.ray3k.superwififinder.Entity;

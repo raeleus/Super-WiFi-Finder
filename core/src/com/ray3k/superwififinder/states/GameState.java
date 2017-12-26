@@ -134,7 +134,7 @@ public class GameState extends State {
         entityManager.addEntity(obstacle);
         
         target = new TargetEntity();
-        target.setPosition(700.0f, 500.0f);
+        target.setPosition(500.0f, 300.0f);
         entityManager.addEntity(target);
         
         bg = new TiledDrawable(spineAtlas.findRegion("floor"));

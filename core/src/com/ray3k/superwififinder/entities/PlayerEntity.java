@@ -158,7 +158,7 @@ public class PlayerEntity extends SpineEntity {
         BigDecimal x2 = new BigDecimal(GameState.target.getX());
         BigDecimal y2 = new BigDecimal(GameState.target.getY());
         
-        Expression expression = new Expression("1+1+x1+y1+x2+y2").with("x1", x1).with("y1", y1).with("x2", x2).with("y2", y2);
+        Expression expression = new Expression(GameState.expression).with("x1", x1).with("y1", y1).with("x2", x2).with("y2", y2);
         
         System.out.println(expression.eval());
     }

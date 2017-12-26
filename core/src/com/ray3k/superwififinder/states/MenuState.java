@@ -30,7 +30,11 @@ import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.EventAction;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
@@ -113,10 +117,26 @@ public class MenuState extends State {
     
     public void showExpressionDialog() {
         final TextField textField = new TextField("", skin);
+        
+        final InputListener keyListener = new InputListener() {
+            @Override
+            public boolean keyDown(InputEvent event, int keycode) {
+                if (keycode == Keys.F1) {
+                    textField.setText("sqrt((x2-x1)^2 + (y2-y1)^2)");
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        };
+        stage.addListener(keyListener);
+        
         Dialog dialog = new Dialog("Enter Expression", skin) {
             @Override
             protected void result(Object object) {
                 super.result(object);
+                
+                stage.removeListener(keyListener);
                 
                 if ((Boolean) object) {
                     GameState.expression = textField.getText();
@@ -124,7 +144,7 @@ public class MenuState extends State {
                 }
             }
         };
-        dialog.text("Enter the point distance formula given: \nthe player position (x1,y1)\nthe target position (x2,y2)", skin.get("black", LabelStyle.class));
+        dialog.text("Enter the point distance formula given:\nthe player position (x1,y1)\nthe target position (x2,y2)", skin.get("black", LabelStyle.class));
         
         dialog.getContentTable().row();
         dialog.getContentTable().add(textField).growX().pad(15.0f);
@@ -136,6 +156,8 @@ public class MenuState extends State {
         dialog.setWidth(350.0f);
         dialog.setHeight(350.0f);
         dialog.setPosition(Gdx.graphics.getWidth() / 2.0f, Gdx.graphics.getHeight() / 2.0f, Align.center);
+        
+        stage.setKeyboardFocus(textField);
     }
 
     @Override
