@@ -46,6 +46,7 @@ import com.ray3k.superwififinder.State;
 import com.ray3k.superwififinder.entities.ObstacleEntity;
 import com.ray3k.superwififinder.entities.PlayerEntity;
 import com.ray3k.superwififinder.entities.TargetEntity;
+import com.ray3k.superwififinder.entities.WiFiEntity;
 
 public class GameState extends State {
     private static GameState instance;
@@ -65,6 +66,7 @@ public class GameState extends State {
     private TiledDrawable bg, liner, wall;
     public static TargetEntity target;
     public static String expression;
+    public static PlayerEntity player;
     
     public static GameState inst() {
         return instance;
@@ -114,10 +116,14 @@ public class GameState extends State {
         
         createStageElements();
         
-        PlayerEntity player = new PlayerEntity();
+        player = new PlayerEntity();
         player.setPosition(Gdx.graphics.getWidth() / 2.0f, Gdx.graphics.getHeight() / 2.0f);
         player.setDepth((int) player.getY());
         entityManager.addEntity(player);
+        
+        WiFiEntity wifi = new WiFiEntity();
+        wifi.setDepth(-100);
+        entityManager.addEntity(wifi);
         
         ObstacleEntity obstacle = new ObstacleEntity(ObstacleEntity.Type.LAMP);
         obstacle.setPosition(50.0f, 50.0f);

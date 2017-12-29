@@ -153,19 +153,6 @@ public class PlayerEntity extends SpineEntity {
         }
         
         setDepth((int) getY());
-        
-        BigDecimal x1 = new BigDecimal(getX());
-        BigDecimal y1 = new BigDecimal(getY());
-        BigDecimal x2 = new BigDecimal(GameState.target.getX());
-        BigDecimal y2 = new BigDecimal(GameState.target.getY());
-        
-        Expression expression = new Expression(GameState.expression).with("x1", x1).with("y1", y1).with("x2", x2).with("y2", y2);
-        
-        try {
-            System.out.println(expression.eval());
-        } catch (ExpressionException e) {
-            Gdx.app.log("PlayerEntity", "Error evaluating player expression.", e);
-        }
     }
 
     @Override
