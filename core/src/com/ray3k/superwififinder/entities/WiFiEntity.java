@@ -26,6 +26,7 @@ package com.ray3k.superwififinder.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.esotericsoftware.spine.AnimationState;
 import com.ray3k.superwififinder.Core;
 import com.ray3k.superwififinder.Entity;
 import com.ray3k.superwififinder.SpineEntity;
@@ -44,6 +45,14 @@ public class WiFiEntity extends SpineEntity {
         super(Core.DATA_PATH + "/spine/wifi.json", "start");
         getAnimationState().getCurrent(0).setLoop(false);
         mode = Mode.START;
+        getAnimationState().addListener(new AnimationState.AnimationStateAdapter() {
+            @Override
+            public void complete(AnimationState.TrackEntry entry) {
+                if (mode == Mode.START) {
+                    mode = Mode.WORKING;
+                }
+            }
+        });
     }
 
     @Override
@@ -57,22 +66,28 @@ public class WiFiEntity extends SpineEntity {
         
         Expression expression = new Expression(GameState.expression).with("x1", x1).with("y1", y1).with("x2", x2).with("y2", y2);
         
-        try {
-            float value = expression.eval().floatValue();
-            if (value < 50) {
-                getAnimationState().setAnimation(0, "4", true);
-            } else if (value < 150) {
-                getAnimationState().setAnimation(0, "3", true);
-            } else if (value < 250) {
-                getAnimationState().setAnimation(0, "2", true);
-            } else if (value < 400) {
-                getAnimationState().setAnimation(0, "1", true);
-            } else {
-                getAnimationState().setAnimation(0, "0", true);
+        if (mode == Mode.WORKING) {
+            try {
+                float value = expression.eval().floatValue();
+                if (value < 30.0f) {
+                    mode = Mode.END;
+                    getAnimationState().setAnimation(0, "win", true);
+                    //todo: add switch to new level code here.
+                } else if (value < 70) {
+                    getAnimationState().setAnimation(0, "4", true);
+                } else if (value < 150) {
+                    getAnimationState().setAnimation(0, "3", true);
+                } else if (value < 250) {
+                    getAnimationState().setAnimation(0, "2", true);
+                } else if (value < 400) {
+                    getAnimationState().setAnimation(0, "1", true);
+                } else {
+                    getAnimationState().setAnimation(0, "0", true);
+                }
+                System.out.println(value);
+            } catch (Expression.ExpressionException e) {
+                Gdx.app.log("WiFiEntity", "Error evaluating player expression.", e);
             }
-            System.out.println(value);
-        } catch (Expression.ExpressionException e) {
-            Gdx.app.log("WiFiEntity", "Error evaluating player expression.", e);
         }
     }
 
