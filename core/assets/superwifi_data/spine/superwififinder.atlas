@@ -2,130 +2,123 @@
 superwififinder.png
 size: 512,512
 format: RGBA8888
-filter: Linear,Linear
+filter: Nearest,Nearest
 repeat: none
 arm
   rotate: false
-  xy: 464, 454
+  xy: 487, 457
   size: 17, 47
   orig: 17, 47
   offset: 0, 0
   index: -1
 battery-bg
   rotate: false
-  xy: 130, 49
+  xy: 341, 339
   size: 68, 36
   orig: 68, 36
   offset: 0, 0
   index: -1
 battery-knob
   rotate: false
-  xy: 1, 8
+  xy: 271, 339
   size: 68, 36
   orig: 68, 36
   offset: 0, 0
   index: -1
 body
   rotate: false
-  xy: 406, 194
+  xy: 118, 111
   size: 57, 67
   orig: 57, 67
   offset: 0, 0
   index: -1
 floor
   rotate: false
-  xy: 1, 46
+  xy: 271, 377
   size: 127, 127
   orig: 127, 127
   offset: 0, 0
   index: -1
 head
-  rotate: false
-  xy: 197, 108
+  rotate: true
+  xy: 411, 328
   size: 48, 65
   orig: 48, 65
   offset: 0, 0
   index: -1
 lamp
   rotate: false
-  xy: 271, 253
+  xy: 1, 105
   size: 115, 248
   orig: 115, 248
   offset: 0, 0
   index: -1
 leg-left
   rotate: false
-  xy: 483, 464
+  xy: 249, 316
   size: 18, 37
   orig: 18, 37
   offset: 0, 0
   index: -1
 leg-right
-  rotate: false
-  xy: 232, 313
+  rotate: true
+  xy: 69, 9
   size: 18, 37
   orig: 18, 37
   offset: 0, 0
   index: -1
 liner
   rotate: false
-  xy: 71, 21
+  xy: 1, 4
   size: 66, 23
   orig: 66, 23
   offset: 0, 0
   index: -1
 plant
-  rotate: false
-  xy: 388, 391
+  rotate: true
+  xy: 1, 29
   size: 74, 110
   orig: 74, 110
   offset: 0, 0
   index: -1
 sofa
   rotate: false
-  xy: 1, 352
+  xy: 1, 355
   size: 268, 149
   orig: 268, 149
   offset: 0, 0
   index: -1
-splash
-  rotate: false
-  xy: 1, 175
-  size: 229, 175
-  orig: 229, 175
-  offset: 0, 0
-  index: -1
 wall
   rotate: false
-  xy: 130, 87
+  xy: 118, 267
   size: 65, 86
   orig: 65, 86
   offset: 0, 0
   index: -1
 wifi1
-  rotate: false
-  xy: 388, 327
+  rotate: true
+  xy: 118, 180
   size: 85, 62
   orig: 85, 62
   offset: 0, 0
   index: -1
 wifi2
-  rotate: false
-  xy: 388, 263
+  rotate: true
+  xy: 185, 268
   size: 85, 62
   orig: 85, 62
   offset: 0, 0
   index: -1
 wifi3
   rotate: false
-  xy: 319, 189
+  xy: 400, 442
   size: 85, 62
   orig: 85, 62
   offset: 0, 0
   index: -1
 wifi4
   rotate: false
-  xy: 232, 189
+  xy: 400, 378
   size: 85, 62
   orig: 85, 62
   offset: 0, 0
