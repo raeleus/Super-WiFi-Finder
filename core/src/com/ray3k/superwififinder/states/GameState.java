@@ -43,10 +43,9 @@ import com.ray3k.superwififinder.Core;
 import com.ray3k.superwififinder.EntityManager;
 import com.ray3k.superwififinder.InputManager;
 import com.ray3k.superwififinder.State;
-import com.ray3k.superwififinder.entities.ObstacleEntity;
+import com.ray3k.superwififinder.entities.LevelLoader;
 import com.ray3k.superwififinder.entities.PlayerEntity;
 import com.ray3k.superwififinder.entities.TargetEntity;
-import com.ray3k.superwififinder.entities.WiFiEntity;
 
 public class GameState extends State {
     private static GameState instance;
@@ -116,33 +115,7 @@ public class GameState extends State {
         
         createStageElements();
         
-//        player = new PlayerEntity();
-//        player.setPosition(Gdx.graphics.getWidth() / 2.0f, Gdx.graphics.getHeight() / 2.0f);
-//        player.setDepth((int) player.getY());
-//        entityManager.addEntity(player);
-//        
-//        WiFiEntity wifi = new WiFiEntity();
-//        wifi.setDepth(-100);
-//        entityManager.addEntity(wifi);
-//        
-//        ObstacleEntity obstacle = new ObstacleEntity(ObstacleEntity.Type.LAMP);
-//        obstacle.setPosition(50.0f, 50.0f);
-//        obstacle.setDepth((int) obstacle.getY());
-//        entityManager.addEntity(obstacle);
-//        
-//        obstacle = new ObstacleEntity(ObstacleEntity.Type.PLANT);
-//        obstacle.setPosition(200.0f, 50.0f);
-//        obstacle.setDepth((int) obstacle.getY());
-//        entityManager.addEntity(obstacle);
-//        
-//        obstacle = new ObstacleEntity(ObstacleEntity.Type.SOFA);
-//        obstacle.setPosition(50.0f, 200.0f);
-//        obstacle.setDepth((int) obstacle.getY());
-//        entityManager.addEntity(obstacle);
-//        
-//        target = new TargetEntity();
-//        target.setPosition(500.0f, 300.0f);
-//        entityManager.addEntity(target);
+        loadLevel("level0.json");
         
         bg = new TiledDrawable(spineAtlas.findRegion("floor"));
         liner = new TiledDrawable(spineAtlas.findRegion("liner"));
@@ -245,5 +218,9 @@ public class GameState extends State {
     
     public void playSound(String name, float volume) {
         Core.assetManager.get(Core.DATA_PATH + "/sfx/" + name + ".wav", Sound.class).play(volume);
+    }
+    
+    public void loadLevel(String fileName) {
+        new LevelLoader(Core.DATA_PATH + "/levels/" + fileName);
     }
 }

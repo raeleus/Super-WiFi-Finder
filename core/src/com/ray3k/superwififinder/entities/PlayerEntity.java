@@ -46,7 +46,9 @@ public class PlayerEntity extends SpineEntity {
     
     @Override
     public void create() {
-        
+        WiFiEntity wiFiEntity = new WiFiEntity();
+        wiFiEntity.setDepth(-100);
+        GameState.entityManager.addEntity(wiFiEntity);
     }
 
     @Override
