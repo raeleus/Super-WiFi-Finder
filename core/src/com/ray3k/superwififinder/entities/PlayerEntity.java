@@ -39,7 +39,7 @@ public class PlayerEntity extends SpineEntity {
     private final static float MOVE_SPEED = 100.0f;
     private static final Vector2 temp = new Vector2();
     public static enum Mode {
-        WALKING, WON
+        WALKING, WON, LOST
     }
     private Mode mode;
     
@@ -60,9 +60,9 @@ public class PlayerEntity extends SpineEntity {
     
     @Override
     public void create() {
-        WiFiEntity wiFiEntity = new WiFiEntity();
-        wiFiEntity.setDepth(-100);
-        GameState.entityManager.addEntity(wiFiEntity);
+        GameState.wifiEntity = new WiFiEntity();
+        GameState.wifiEntity.setDepth(-100);
+        GameState.entityManager.addEntity(GameState.wifiEntity);
     }
 
     @Override
@@ -168,9 +168,14 @@ public class PlayerEntity extends SpineEntity {
                     getSkeletonBounds().update(getSkeleton(), true);
                 }
             }
-        } else {
+        } else if (mode == Mode.WON) {
             if (!getAnimationState().getCurrent(0).getAnimation().getName().equals("stand")) {
                 getAnimationState().setAnimation(0, "stand", true);
+                setMotion(0.0f, 0.0f);
+            }
+        } else {
+            if (!getAnimationState().getCurrent(0).getAnimation().getName().equals("lose")) {
+                getAnimationState().setAnimation(0, "lose", false);
                 setMotion(0.0f, 0.0f);
             }
         }

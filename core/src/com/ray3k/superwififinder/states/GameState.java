@@ -27,6 +27,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -50,10 +51,12 @@ import com.ray3k.superwififinder.Entity;
 import com.ray3k.superwififinder.EntityManager;
 import com.ray3k.superwififinder.InputManager;
 import com.ray3k.superwififinder.State;
+import com.ray3k.superwififinder.entities.GameOverTimerEntity;
 import com.ray3k.superwififinder.entities.LevelChanger;
 import com.ray3k.superwififinder.entities.ObstacleEntity;
 import com.ray3k.superwififinder.entities.PlayerEntity;
 import com.ray3k.superwififinder.entities.TargetEntity;
+import com.ray3k.superwififinder.entities.WiFiEntity;
 
 public class GameState extends State {
     private static GameState instance;
@@ -74,8 +77,11 @@ public class GameState extends State {
     public static TargetEntity target;
     public static String expression;
     public static PlayerEntity player;
+    public static WiFiEntity wifiEntity;
     public static LevelChanger levelChanger;
     public ProgressBar progressBar;
+    private float timer;
+    private final static float BATTERY_TIME = 60.0f;
     
     public static GameState inst() {
         return instance;
@@ -144,6 +150,9 @@ public class GameState extends State {
         progressBar.setValue(50.0f);
         progressBar.setSize(68.0f, 36.0f);
         progressBar.setPosition(Gdx.graphics.getWidth() - 20.0f, Gdx.graphics.getHeight() - 20.0f, Align.topRight);
+        progressBar.setAnimateDuration(.5f);
+        
+        timer = BATTERY_TIME;
     }
     
     private void createStageElements() {
@@ -151,7 +160,8 @@ public class GameState extends State {
         root.setFillParent(true);
         stage.addActor(root);
         
-        scoreLabel = new Label("0", skin);
+        scoreLabel = new Label("0", skin, "big");
+        scoreLabel.setColor(Color.BLACK);
         root.add(scoreLabel).expandY().padTop(25.0f).top();
     }
     
@@ -180,12 +190,24 @@ public class GameState extends State {
     public void act(float delta) {
         entityManager.act(delta);
         
+        progressBar.setValue(timer / BATTERY_TIME * 100.0f);
         progressBar.act(delta);
         
         stage.act(delta);
         
         if (Gdx.input.isKeyPressed(Keys.ESCAPE)) {
             Core.stateManager.loadState("menu");
+        }
+        
+        if (player.getMode() == PlayerEntity.Mode.WALKING) {
+            timer -= delta;
+            if (timer < 0) {
+                GameOverTimerEntity gameOver = new GameOverTimerEntity(3.0f);
+                entityManager.addEntity(gameOver);
+                player.setMode(PlayerEntity.Mode.LOST);
+                wifiEntity.setMode(WiFiEntity.Mode.OFF);
+                playSound("lose", 1.0f);
+            }
         }
     }
 

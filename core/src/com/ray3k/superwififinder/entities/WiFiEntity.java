@@ -35,8 +35,8 @@ import com.udojava.evalex.Expression;
 import java.math.BigDecimal;
 
 public class WiFiEntity extends SpineEntity {
-    private static enum Mode {
-        START, WORKING, END
+    public static enum Mode {
+        START, WORKING, END, OFF
     }
     
     private Mode mode;
@@ -75,16 +75,17 @@ public class WiFiEntity extends SpineEntity {
                     GameState.levelChanger.changeLevel();
                     GameState.inst().playSound("win", 1.0f);
                     GameState.player.setMode(PlayerEntity.Mode.WON);
+                    GameState.inst().addScore(1);
                 } else if (value < 70) {
-                    getAnimationState().setAnimation(0, "4", true);
+                    getAnimationState().setAnimation(0, "4", false);
                 } else if (value < 150) {
-                    getAnimationState().setAnimation(0, "3", true);
+                    getAnimationState().setAnimation(0, "3", false);
                 } else if (value < 250) {
-                    getAnimationState().setAnimation(0, "2", true);
+                    getAnimationState().setAnimation(0, "2", false);
                 } else if (value < 400) {
-                    getAnimationState().setAnimation(0, "1", true);
+                    getAnimationState().setAnimation(0, "1", false);
                 } else {
-                    getAnimationState().setAnimation(0, "0", true);
+                    getAnimationState().setAnimation(0, "0", false);
                 }
             } catch (Expression.ExpressionException e) {
                 Gdx.app.log("WiFiEntity", "Error evaluating player expression.", e);
@@ -113,4 +114,14 @@ public class WiFiEntity extends SpineEntity {
     public void collision(Entity other) {
     }
 
+    public Mode getMode() {
+        return mode;
+    }
+
+    public void setMode(Mode mode) {
+        this.mode = mode;
+        if (mode == Mode.OFF) {
+            getAnimationState().setAnimation(0, "0", false);
+        }
+    }
 }

@@ -77,7 +77,6 @@ public class LevelChanger extends Entity {
     
     public void changeLevel(float delay) {
         timer = delay;
-        System.out.println("change level");
     }
     
     public void changeLevel() {
