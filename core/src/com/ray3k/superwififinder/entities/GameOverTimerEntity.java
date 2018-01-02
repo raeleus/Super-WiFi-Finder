@@ -26,8 +26,6 @@ package com.ray3k.superwififinder.entities;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.ray3k.superwififinder.Core;
-import com.ray3k.superwififinder.Core;
-import com.ray3k.superwififinder.Entity;
 import com.ray3k.superwififinder.Entity;
 import com.ray3k.superwififinder.states.GameOverState;
 import com.ray3k.superwififinder.states.GameState;
