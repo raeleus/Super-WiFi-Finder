@@ -54,11 +54,8 @@ public class LevelChanger extends Entity {
                     String level = levels.random();
                     levels.removeValue(level, false);
                     GameState.inst().loadLevel(Core.DATA_PATH + "/spine/" + level + ".json");
-<<<<<<< HEAD
-=======
                 } else {
                     GameState.entityManager.addEntity(new GameOverTimerEntity(1.0f));
->>>>>>> dev
                 }
             }
         }
