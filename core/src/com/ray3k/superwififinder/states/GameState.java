@@ -66,6 +66,7 @@ public class GameState extends State {
     public static TargetEntity target;
     public static String expression;
     public static PlayerEntity player;
+    public static LevelLoader levelLoader;
     
     public static GameState inst() {
         return instance;
