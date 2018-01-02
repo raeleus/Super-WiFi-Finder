@@ -39,11 +39,15 @@ import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.esotericsoftware.spine.SkeletonData;
+import com.esotericsoftware.spine.SlotData;
 import com.ray3k.superwififinder.Core;
+import com.ray3k.superwififinder.Entity;
 import com.ray3k.superwififinder.EntityManager;
 import com.ray3k.superwififinder.InputManager;
 import com.ray3k.superwififinder.State;
-import com.ray3k.superwififinder.entities.LevelLoader;
+import com.ray3k.superwififinder.entities.LevelChanger;
+import com.ray3k.superwififinder.entities.ObstacleEntity;
 import com.ray3k.superwififinder.entities.PlayerEntity;
 import com.ray3k.superwififinder.entities.TargetEntity;
 
@@ -66,7 +70,7 @@ public class GameState extends State {
     public static TargetEntity target;
     public static String expression;
     public static PlayerEntity player;
-    public static LevelLoader levelLoader;
+    public static LevelChanger levelChanger;
     
     public static GameState inst() {
         return instance;
@@ -116,7 +120,10 @@ public class GameState extends State {
         
         createStageElements();
         
-        loadLevel("level0.json");
+        loadLevel(Core.DATA_PATH + "/spine/level0.json");
+        
+        levelChanger = new LevelChanger();
+        entityManager.addEntity(levelChanger);
         
         bg = new TiledDrawable(spineAtlas.findRegion("floor"));
         liner = new TiledDrawable(spineAtlas.findRegion("liner"));
@@ -221,7 +228,32 @@ public class GameState extends State {
         Core.assetManager.get(Core.DATA_PATH + "/sfx/" + name + ".wav", Sound.class).play(volume);
     }
     
-    public void loadLevel(String fileName) {
-        new LevelLoader(Core.DATA_PATH + "/levels/" + fileName);
+    public void loadLevel(String levelPath) {
+        SkeletonData skeletonData = Core.assetManager.get(levelPath, SkeletonData.class);
+    
+        for (SlotData slotData : skeletonData.getSlots()) {
+            Entity entity = null;
+            if (slotData.getAttachmentName() != null) {
+                if (slotData.getAttachmentName().equals("robot")) {
+                    entity = new PlayerEntity();
+                    GameState.player = (PlayerEntity) entity;
+                } else if (slotData.getAttachmentName().equals("lamp")) {
+                    entity = new ObstacleEntity(ObstacleEntity.Type.LAMP);
+                } else if (slotData.getAttachmentName().equals("plant")) {
+                    entity = new ObstacleEntity(ObstacleEntity.Type.PLANT);
+                } else if (slotData.getAttachmentName().equals("sofa")) {
+                    entity = new ObstacleEntity(ObstacleEntity.Type.SOFA);
+                } else if (slotData.getAttachmentName().equals("WiFi")) {
+                    entity = new TargetEntity();
+                    GameState.target = (TargetEntity) entity;
+}
+            }
+            
+            if (entity != null) {
+                entity.setPosition(slotData.getBoneData().getX(), slotData.getBoneData().getY());
+                entity.setDepth((int) entity.getY());
+                GameState.entityManager.addEntity(entity);
+            }
+        }
     }
 }
