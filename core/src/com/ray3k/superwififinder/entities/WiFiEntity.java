@@ -73,6 +73,7 @@ public class WiFiEntity extends SpineEntity {
                     mode = Mode.END;
                     getAnimationState().setAnimation(0, "win", true);
                     GameState.levelChanger.changeLevel();
+                    GameState.inst().playSound("win", 1.0f);
                 } else if (value < 70) {
                     getAnimationState().setAnimation(0, "4", true);
                 } else if (value < 150) {

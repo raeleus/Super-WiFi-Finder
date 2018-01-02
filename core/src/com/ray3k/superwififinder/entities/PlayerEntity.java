@@ -28,13 +28,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.esotericsoftware.spine.AnimationState;
+import com.esotericsoftware.spine.Event;
 import com.ray3k.superwififinder.Core;
 import com.ray3k.superwififinder.Entity;
 import com.ray3k.superwififinder.SpineEntity;
 import com.ray3k.superwififinder.states.GameState;
-import com.udojava.evalex.Expression;
-import com.udojava.evalex.Expression.ExpressionException;
-import java.math.BigDecimal;
 
 public class PlayerEntity extends SpineEntity {
     private final static float MOVE_SPEED = 100.0f;
@@ -42,6 +41,15 @@ public class PlayerEntity extends SpineEntity {
     public PlayerEntity() {
         super(Core.DATA_PATH + "/spine/robot.json", "stand");
         getAnimationState().getCurrent(0).setLoop(true);
+        
+        getAnimationState().addListener(new AnimationState.AnimationStateAdapter() {
+            @Override
+            public void event(AnimationState.TrackEntry entry, Event event) {
+                if (event.getData().getName().equals("step")) {
+                    GameState.inst().playSound("step", .5f);
+                }
+            }
+        });
     }
     
     @Override
