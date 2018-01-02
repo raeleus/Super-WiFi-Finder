@@ -98,4 +98,19 @@ public class EntityManager {
             }
         }
     }
+    
+    public void clear(boolean clearPersistent) {
+        Iterator<Entity> iter = getEntities().iterator();
+        
+        while(iter.hasNext()) {
+            Entity entity = iter.next();
+            if (clearPersistent || !entity.isPersistent()) {
+                entity.dispose();
+            }
+        }
+    }
+    
+    public void clear() {
+        clear(false);
+    }
 }

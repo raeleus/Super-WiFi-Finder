@@ -24,16 +24,25 @@
 package com.ray3k.superwififinder.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.EventAction;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Label.LabelStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.JsonReader;
@@ -83,7 +92,7 @@ public class MenuState extends State {
             @Override
             public void changed(ChangeListener.ChangeEvent event, Actor actor) {
                 Core.assetManager.get(Core.DATA_PATH + "/sfx/beep.wav", Sound.class).play(.25f);
-                Core.stateManager.loadState("game");
+                showExpressionDialog();
             }
         });
         
@@ -104,6 +113,51 @@ public class MenuState extends State {
         Gdx.gl.glClearColor(85 / 255.0f, 178 / 255.0f, 255 / 255.0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.draw();
+    }
+    
+    public void showExpressionDialog() {
+        final TextField textField = new TextField("", skin);
+        
+        final InputListener keyListener = new InputListener() {
+            @Override
+            public boolean keyDown(InputEvent event, int keycode) {
+                if (keycode == Keys.F1) {
+                    textField.setText("sqrt((x2-x1)^2 + (y2-y1)^2)");
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        };
+        stage.addListener(keyListener);
+        
+        Dialog dialog = new Dialog("Enter Expression", skin) {
+            @Override
+            protected void result(Object object) {
+                super.result(object);
+                
+                stage.removeListener(keyListener);
+                
+                if ((Boolean) object) {
+                    GameState.expression = textField.getText();
+                    Core.stateManager.loadState("game");
+                }
+            }
+        };
+        dialog.text("Enter the point distance formula given:\nthe player position (x1,y1)\nthe target position (x2,y2)", skin.get("black", LabelStyle.class));
+        
+        dialog.getContentTable().row();
+        dialog.getContentTable().add(textField).growX().pad(15.0f);
+        
+        dialog.button("OK", true, skin.get("small", TextButtonStyle.class)).button("Cancel", false, skin.get("small", TextButtonStyle.class));
+        dialog.key(Keys.ENTER, true).key(Keys.ESCAPE, false);
+        
+        dialog.show(stage);
+        dialog.setWidth(350.0f);
+        dialog.setHeight(350.0f);
+        dialog.setPosition(Gdx.graphics.getWidth() / 2.0f, Gdx.graphics.getHeight() / 2.0f, Align.center);
+        
+        stage.setKeyboardFocus(textField);
     }
 
     @Override

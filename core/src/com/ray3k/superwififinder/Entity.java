@@ -37,6 +37,7 @@ public abstract class Entity {
     private final Rectangle collisionBox;
     private final Vector2 collisionBoxPosition;
     private boolean checkingCollisions;
+    private boolean persistent;
 
     public Entity() {
         position = new Vector2();
@@ -49,6 +50,7 @@ public abstract class Entity {
         collisionBoxPosition.x = 0;
         collisionBoxPosition.y = 0;
         checkingCollisions = false;
+        persistent = false;
     }
     
     public abstract void create();
@@ -221,5 +223,13 @@ public abstract class Entity {
     
     public Core getCore() {
         return Core.instance;
+    }
+
+    public boolean isPersistent() {
+        return persistent;
+    }
+
+    public void setPersistent(boolean persistent) {
+        this.persistent = persistent;
     }
 }

@@ -24,22 +24,39 @@
 package com.ray3k.superwififinder.states;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar.ProgressBarStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.esotericsoftware.spine.SkeletonData;
+import com.esotericsoftware.spine.SlotData;
 import com.ray3k.superwififinder.Core;
+import com.ray3k.superwififinder.Entity;
 import com.ray3k.superwififinder.EntityManager;
 import com.ray3k.superwififinder.InputManager;
 import com.ray3k.superwififinder.State;
+import com.ray3k.superwififinder.entities.GameOverTimerEntity;
+import com.ray3k.superwififinder.entities.LevelChanger;
+import com.ray3k.superwififinder.entities.ObstacleEntity;
+import com.ray3k.superwififinder.entities.PlayerEntity;
+import com.ray3k.superwififinder.entities.TargetEntity;
+import com.ray3k.superwififinder.entities.WiFiEntity;
 
 public class GameState extends State {
     private static GameState instance;
@@ -56,6 +73,15 @@ public class GameState extends State {
     private Label scoreLabel;
     public static EntityManager entityManager;
     public static TextureAtlas spineAtlas;
+    private TiledDrawable bg, liner, wall;
+    public static TargetEntity target;
+    public static String expression;
+    public static PlayerEntity player;
+    public static WiFiEntity wifiEntity;
+    public static LevelChanger levelChanger;
+    public ProgressBar progressBar;
+    private float timer;
+    private final static float BATTERY_TIME = 60.0f;
     
     public static GameState inst() {
         return instance;
@@ -69,7 +95,7 @@ public class GameState extends State {
     public void start() {
         instance = this;
         
-        spineAtlas = Core.assetManager.get(Core.DATA_PATH + "/spine/vault-bound.atlas", TextureAtlas.class);
+        spineAtlas = Core.assetManager.get(Core.DATA_PATH + "/spine/superwififinder.atlas", TextureAtlas.class);
         
         score = 0;
         
@@ -83,13 +109,13 @@ public class GameState extends State {
         uiCamera.position.set(uiCamera.viewportWidth / 2, uiCamera.viewportHeight / 2, 0);
         
         gameCamera = new OrthographicCamera();
-        gameViewport = new ScreenViewport(gameCamera);
+        gameViewport = new StretchViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), gameCamera);
         gameViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         gameViewport.apply();
         
         gameCamera.position.set(gameCamera.viewportWidth / 2, gameCamera.viewportHeight / 2, 0);
         
-        skin = Core.assetManager.get(Core.DATA_PATH + "/ui/vault-bound.json", Skin.class);
+        skin = Core.assetManager.get(Core.DATA_PATH + "/ui/glassy-ui.json", Skin.class);
         stage = new Stage(new ScreenViewport());
         
         InputMultiplexer inputMultiplexer = new InputMultiplexer();
@@ -105,7 +131,28 @@ public class GameState extends State {
         
         createStageElements();
         
+        loadLevel(Core.DATA_PATH + "/spine/level0.json");
         
+        levelChanger = new LevelChanger();
+        entityManager.addEntity(levelChanger);
+        
+        bg = new TiledDrawable(spineAtlas.findRegion("floor"));
+        liner = new TiledDrawable(spineAtlas.findRegion("liner"));
+        wall = new TiledDrawable(spineAtlas.findRegion("wall"));
+        
+        ProgressBarStyle progressBarStyle = new ProgressBarStyle();
+        progressBarStyle.background = new TextureRegionDrawable(spineAtlas.findRegion("battery-bg"));
+        progressBarStyle.knobBefore = new TiledDrawable(spineAtlas.findRegion("battery-knob"));
+        progressBarStyle.knobBefore.setMinWidth(0.0f);
+        progressBarStyle.knobBefore.setMinHeight(36.0f);
+        
+        progressBar = new ProgressBar(0.0f, 100.0f, 1.0f, false, progressBarStyle);
+        progressBar.setValue(50.0f);
+        progressBar.setSize(68.0f, 36.0f);
+        progressBar.setPosition(Gdx.graphics.getWidth() - 20.0f, Gdx.graphics.getHeight() - 20.0f, Align.topRight);
+        progressBar.setAnimateDuration(.5f);
+        
+        timer = BATTERY_TIME;
     }
     
     private void createStageElements() {
@@ -113,7 +160,8 @@ public class GameState extends State {
         root.setFillParent(true);
         stage.addActor(root);
         
-        scoreLabel = new Label("0", skin);
+        scoreLabel = new Label("0", skin, "big");
+        scoreLabel.setColor(Color.BLACK);
         root.add(scoreLabel).expandY().padTop(25.0f).top();
     }
     
@@ -122,11 +170,16 @@ public class GameState extends State {
         Gdx.gl.glClearColor(207.0f / 255.0f, 111.0f / 255.0f, 101.0f / 255.0f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         
+        
         gameCamera.update();
         spriteBatch.setProjectionMatrix(gameCamera.combined);
         spriteBatch.begin();
         spriteBatch.setBlendFunction(GL20.GL_ONE, GL20.GL_ONE_MINUS_SRC_ALPHA);
+        bg.draw(spriteBatch, 0.0f, 0.0f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        wall.draw(spriteBatch, 0.0f, Gdx.graphics.getHeight() - 160.0f, Gdx.graphics.getWidth(), 160.0f);
+        liner.draw(spriteBatch, 0.0f, Gdx.graphics.getHeight() - 160.0f, Gdx.graphics.getWidth(), 23.0f);
         entityManager.draw(spriteBatch, delta);
+        progressBar.draw(spriteBatch, 1.0f);
         spriteBatch.end();
         
         spriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
@@ -137,7 +190,25 @@ public class GameState extends State {
     public void act(float delta) {
         entityManager.act(delta);
         
+        progressBar.setValue(timer / BATTERY_TIME * 100.0f);
+        progressBar.act(delta);
+        
         stage.act(delta);
+        
+        if (Gdx.input.isKeyPressed(Keys.ESCAPE)) {
+            Core.stateManager.loadState("menu");
+        }
+        
+        if (player.getMode() == PlayerEntity.Mode.WALKING) {
+            timer -= delta;
+            if (timer < 0) {
+                GameOverTimerEntity gameOver = new GameOverTimerEntity(3.0f);
+                entityManager.addEntity(gameOver);
+                player.setMode(PlayerEntity.Mode.LOST);
+                wifiEntity.setMode(WiFiEntity.Mode.OFF);
+                playSound("lose", 1.0f);
+            }
+        }
     }
 
     @Override
@@ -151,8 +222,7 @@ public class GameState extends State {
     
     @Override
     public void resize(int width, int height) {
-        gameViewport.update(width, height);
-        gameCamera.position.set(width / 2, height / 2.0f, 0.0f);
+        gameViewport.update(width, height, true);
         
         uiViewport.update(width, height);
         uiCamera.position.set(uiCamera.viewportWidth / 2, uiCamera.viewportHeight / 2, 0);
@@ -195,23 +265,36 @@ public class GameState extends State {
         return stage;
     }
     
-    public void playJet() {
-        Core.assetManager.get(Core.DATA_PATH + "/sfx/jet.wav", Sound.class).play(.25f);
+    public void playSound(String name, float volume) {
+        Core.assetManager.get(Core.DATA_PATH + "/sfx/" + name + ".wav", Sound.class).play(volume);
     }
     
-    public void playJump() {
-        Core.assetManager.get(Core.DATA_PATH + "/sfx/jump.wav", Sound.class).play(.25f);
-    }
+    public void loadLevel(String levelPath) {
+        SkeletonData skeletonData = Core.assetManager.get(levelPath, SkeletonData.class);
     
-    public void playHurt() {
-        Core.assetManager.get(Core.DATA_PATH + "/sfx/hurt.wav", Sound.class).play(.25f);
-    }
-    
-    public void playThud() {
-        Core.assetManager.get(Core.DATA_PATH + "/sfx/thud.wav", Sound.class).play(.25f);
-    }
-    
-    public void playBlast() {
-        Core.assetManager.get(Core.DATA_PATH + "/sfx/blast.wav", Sound.class).play(.5f);
+        for (SlotData slotData : skeletonData.getSlots()) {
+            Entity entity = null;
+            if (slotData.getAttachmentName() != null) {
+                if (slotData.getAttachmentName().equals("robot")) {
+                    entity = new PlayerEntity();
+                    GameState.player = (PlayerEntity) entity;
+                } else if (slotData.getAttachmentName().equals("lamp")) {
+                    entity = new ObstacleEntity(ObstacleEntity.Type.LAMP);
+                } else if (slotData.getAttachmentName().equals("plant")) {
+                    entity = new ObstacleEntity(ObstacleEntity.Type.PLANT);
+                } else if (slotData.getAttachmentName().equals("sofa")) {
+                    entity = new ObstacleEntity(ObstacleEntity.Type.SOFA);
+                } else if (slotData.getAttachmentName().equals("WiFi")) {
+                    entity = new TargetEntity();
+                    GameState.target = (TargetEntity) entity;
+}
+            }
+            
+            if (entity != null) {
+                entity.setPosition(slotData.getBoneData().getX(), slotData.getBoneData().getY());
+                entity.setDepth((int) entity.getY());
+                GameState.entityManager.addEntity(entity);
+            }
+        }
     }
 }
