@@ -33,9 +33,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar.ProgressBarStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -71,6 +75,7 @@ public class GameState extends State {
     public static String expression;
     public static PlayerEntity player;
     public static LevelChanger levelChanger;
+    public ProgressBar progressBar;
     
     public static GameState inst() {
         return instance;
@@ -128,6 +133,17 @@ public class GameState extends State {
         bg = new TiledDrawable(spineAtlas.findRegion("floor"));
         liner = new TiledDrawable(spineAtlas.findRegion("liner"));
         wall = new TiledDrawable(spineAtlas.findRegion("wall"));
+        
+        ProgressBarStyle progressBarStyle = new ProgressBarStyle();
+        progressBarStyle.background = new TextureRegionDrawable(spineAtlas.findRegion("battery-bg"));
+        progressBarStyle.knobBefore = new TiledDrawable(spineAtlas.findRegion("battery-knob"));
+        progressBarStyle.knobBefore.setMinWidth(0.0f);
+        progressBarStyle.knobBefore.setMinHeight(36.0f);
+        
+        progressBar = new ProgressBar(0.0f, 100.0f, 1.0f, false, progressBarStyle);
+        progressBar.setValue(50.0f);
+        progressBar.setSize(68.0f, 36.0f);
+        progressBar.setPosition(Gdx.graphics.getWidth() - 20.0f, Gdx.graphics.getHeight() - 20.0f, Align.topRight);
     }
     
     private void createStageElements() {
@@ -153,6 +169,7 @@ public class GameState extends State {
         wall.draw(spriteBatch, 0.0f, Gdx.graphics.getHeight() - 160.0f, Gdx.graphics.getWidth(), 160.0f);
         liner.draw(spriteBatch, 0.0f, Gdx.graphics.getHeight() - 160.0f, Gdx.graphics.getWidth(), 23.0f);
         entityManager.draw(spriteBatch, delta);
+        progressBar.draw(spriteBatch, 1.0f);
         spriteBatch.end();
         
         spriteBatch.setBlendFunction(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
@@ -162,6 +179,8 @@ public class GameState extends State {
     @Override
     public void act(float delta) {
         entityManager.act(delta);
+        
+        progressBar.act(delta);
         
         stage.act(delta);
         
