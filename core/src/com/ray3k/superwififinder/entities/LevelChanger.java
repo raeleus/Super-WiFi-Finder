@@ -44,7 +44,6 @@ public class LevelChanger extends Entity {
     @Override
     public void act(float delta) {
         if (timer > 0) {
-            System.out.println(timer);
             timer -= delta;
             if (timer < 0) {
                 timer = -1;

@@ -74,6 +74,7 @@ public class WiFiEntity extends SpineEntity {
                     getAnimationState().setAnimation(0, "win", true);
                     GameState.levelChanger.changeLevel();
                     GameState.inst().playSound("win", 1.0f);
+                    GameState.player.setMode(PlayerEntity.Mode.WON);
                 } else if (value < 70) {
                     getAnimationState().setAnimation(0, "4", true);
                 } else if (value < 150) {
@@ -85,7 +86,6 @@ public class WiFiEntity extends SpineEntity {
                 } else {
                     getAnimationState().setAnimation(0, "0", true);
                 }
-                System.out.println(value);
             } catch (Expression.ExpressionException e) {
                 Gdx.app.log("WiFiEntity", "Error evaluating player expression.", e);
             }
