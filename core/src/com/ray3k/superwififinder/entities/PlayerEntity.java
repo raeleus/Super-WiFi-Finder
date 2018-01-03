@@ -81,8 +81,8 @@ public class PlayerEntity extends SpineEntity {
 
             if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
                 setMotion(MOVE_SPEED, 0.0f);
-                if (getX() >= Gdx.graphics.getWidth() - 30.0f) {
-                    setX(Gdx.graphics.getWidth() - 30.0f);
+                if (getX() >= GameState.GAME_WIDTH - 30.0f) {
+                    setX(GameState.GAME_WIDTH - 30.0f);
                     setMotion(0.0f, 0.0f);
                 } else {
                     getSkeleton().setPosition(getX() + getXspeed() * delta, getY() + getYspeed() * delta);
@@ -125,8 +125,8 @@ public class PlayerEntity extends SpineEntity {
                 }
             } else if (Gdx.input.isKeyPressed(Keys.UP)) {
                 setMotion(MOVE_SPEED, 90.0f);
-                if (getY() >= Gdx.graphics.getHeight() - 170.0f) {
-                    setY(Gdx.graphics.getHeight() - 170.0f);
+                if (getY() >= GameState.GAME_HEIGHT - 170.0f) {
+                    setY(GameState.GAME_HEIGHT - 170.0f);
                     setMotion(0.0f, 0.0f);
                 } else {
                     getSkeleton().setPosition(getX() + getXspeed() * delta, getY() + getYspeed() * delta);

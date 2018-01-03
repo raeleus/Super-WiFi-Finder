@@ -41,7 +41,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TiledDrawable;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.esotericsoftware.spine.SkeletonData;
@@ -64,8 +63,6 @@ public class GameState extends State {
     private static int highscore = 0;
     private OrthographicCamera gameCamera;
     private Viewport gameViewport;
-    private OrthographicCamera uiCamera;
-    private Viewport uiViewport;
     private InputManager inputManager;
     private Skin skin;
     private Stage stage;
@@ -82,6 +79,8 @@ public class GameState extends State {
     public ProgressBar progressBar;
     private float timer;
     private final static float BATTERY_TIME = 60.0f;
+    public static final float GAME_WIDTH = 800.0f;
+    public static final float GAME_HEIGHT = 600.0f;
     
     public static GameState inst() {
         return instance;
@@ -99,24 +98,17 @@ public class GameState extends State {
         
         score = 0;
         
-        inputManager = new InputManager(); 
-        
-        uiCamera = new OrthographicCamera();
-        uiViewport = new ScreenViewport(uiCamera);
-        uiViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        uiViewport.apply();
-        
-        uiCamera.position.set(uiCamera.viewportWidth / 2, uiCamera.viewportHeight / 2, 0);
+        inputManager = new InputManager();
         
         gameCamera = new OrthographicCamera();
-        gameViewport = new StretchViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), gameCamera);
-        gameViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        gameViewport = new StretchViewport(GameState.GAME_WIDTH, GameState.GAME_HEIGHT, gameCamera);
+        gameViewport.update(Gdx.graphics.getWidth(), Gdx.graphics.getWidth(), true);
         gameViewport.apply();
         
         gameCamera.position.set(gameCamera.viewportWidth / 2, gameCamera.viewportHeight / 2, 0);
         
         skin = Core.assetManager.get(Core.DATA_PATH + "/ui/glassy-ui.json", Skin.class);
-        stage = new Stage(new ScreenViewport());
+        stage = new Stage(new StretchViewport(GameState.GAME_WIDTH, GameState.GAME_HEIGHT));
         
         InputMultiplexer inputMultiplexer = new InputMultiplexer();
         inputMultiplexer.addProcessor(inputManager);
@@ -149,7 +141,7 @@ public class GameState extends State {
         progressBar = new ProgressBar(0.0f, 100.0f, 1.0f, false, progressBarStyle);
         progressBar.setValue(50.0f);
         progressBar.setSize(68.0f, 36.0f);
-        progressBar.setPosition(Gdx.graphics.getWidth() - 20.0f, Gdx.graphics.getHeight() - 20.0f, Align.topRight);
+        progressBar.setPosition(GameState.GAME_WIDTH - 20.0f, GameState.GAME_HEIGHT - 20.0f, Align.topRight);
         progressBar.setAnimateDuration(.5f);
         
         timer = BATTERY_TIME;
@@ -175,9 +167,9 @@ public class GameState extends State {
         spriteBatch.setProjectionMatrix(gameCamera.combined);
         spriteBatch.begin();
         spriteBatch.setBlendFunction(GL20.GL_ONE, GL20.GL_ONE_MINUS_SRC_ALPHA);
-        bg.draw(spriteBatch, 0.0f, 0.0f, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        wall.draw(spriteBatch, 0.0f, Gdx.graphics.getHeight() - 160.0f, Gdx.graphics.getWidth(), 160.0f);
-        liner.draw(spriteBatch, 0.0f, Gdx.graphics.getHeight() - 160.0f, Gdx.graphics.getWidth(), 23.0f);
+        bg.draw(spriteBatch, 0.0f, 0.0f, GameState.GAME_WIDTH, GameState.GAME_HEIGHT);
+        wall.draw(spriteBatch, 0.0f, GameState.GAME_HEIGHT - 160.0f, GameState.GAME_WIDTH, 160.0f);
+        liner.draw(spriteBatch, 0.0f, GameState.GAME_HEIGHT - 160.0f, GameState.GAME_WIDTH, 23.0f);
         entityManager.draw(spriteBatch, delta);
         progressBar.draw(spriteBatch, 1.0f);
         spriteBatch.end();
@@ -223,9 +215,6 @@ public class GameState extends State {
     @Override
     public void resize(int width, int height) {
         gameViewport.update(width, height, true);
-        
-        uiViewport.update(width, height);
-        uiCamera.position.set(uiCamera.viewportWidth / 2, uiCamera.viewportHeight / 2, 0);
         stage.getViewport().update(width, height, true);
     }
 

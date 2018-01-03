@@ -155,7 +155,7 @@ public class MenuState extends State {
         dialog.show(stage);
         dialog.setWidth(350.0f);
         dialog.setHeight(350.0f);
-        dialog.setPosition(Gdx.graphics.getWidth() / 2.0f, Gdx.graphics.getHeight() / 2.0f, Align.center);
+        dialog.setPosition(GameState.GAME_WIDTH / 2.0f, GameState.GAME_HEIGHT / 2.0f, Align.center);
         
         stage.setKeyboardFocus(textField);
     }
