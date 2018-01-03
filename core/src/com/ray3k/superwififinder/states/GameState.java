@@ -72,7 +72,7 @@ public class GameState extends State {
     public static TextureAtlas spineAtlas;
     private TiledDrawable bg, liner, wall;
     public static TargetEntity target;
-    public static String expression;
+    public static String expression = "";
     public static PlayerEntity player;
     public static WiFiEntity wifiEntity;
     public static LevelChanger levelChanger;

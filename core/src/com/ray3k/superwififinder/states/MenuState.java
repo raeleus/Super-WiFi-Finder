@@ -116,7 +116,7 @@ public class MenuState extends State {
     }
     
     public void showExpressionDialog() {
-        final TextField textField = new TextField("", skin);
+        final TextField textField = new TextField(GameState.expression, skin);
         
         final InputListener keyListener = new InputListener() {
             @Override
